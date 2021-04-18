@@ -6,10 +6,14 @@ import hashlib
 app = FastAPI()
 
 
-@app.get("/auth", status_code=204)
+@app.get("/auth")
 def validate_password(password: str, password_hash: str, response: Response):
-    if password_hash != hashlib.sha512(password.encode()).hexdigest():
-        response.status_code = status.HTTP_401_UNAUTHORIZED
+    normal_to_hashed = hashlib.sha512(password.encode()).hexdigest()
+    response.status_code = status.HTTP_401_UNAUTHORIZED
+    if password_hash != normal_to_hashed:
+        response.status_code = status.HTTP_204_NO_CONTENT
+
+    return response
 
 
 if __name__ == '__main__':
