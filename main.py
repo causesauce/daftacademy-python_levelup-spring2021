@@ -14,9 +14,9 @@ def method_post():
     return {"method": "GET"}
 
 
-@app.post("/method", status_code=200)
+@app.put("/method", status_code=200)
 def method_post():
-    return {"method": "POST"}
+    return {"method": "PUT"}
 
 
 @app.delete("/method", status_code=200)
