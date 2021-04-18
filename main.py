@@ -1,14 +1,32 @@
-# main.py
-
 from fastapi import FastAPI
 import uvicorn
 
 app = FastAPI()
 
 
-@app.get("/")
-def root():
-    return {"message": "Hello world!"}
+@app.post("/method", status_code=201)
+def method_post():
+    return {"method": "POST"}
+
+
+@app.get("/method", status_code=200)
+def method_post():
+    return {"method": "GET"}
+
+
+@app.post("/method", status_code=200)
+def method_post():
+    return {"method": "POST"}
+
+
+@app.delete("/method", status_code=200)
+def method_post():
+    return {"method": "DELETE"}
+
+
+@app.options("/method", status_code=200)
+def method_post():
+    return {"method": "OPTIONS"}
 
 
 if __name__ == '__main__':
