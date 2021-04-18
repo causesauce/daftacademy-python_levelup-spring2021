@@ -10,7 +10,7 @@ def validate_password(password: str, password_hash: str, response: Response):
 
     normal_to_hashed = hashlib.sha512(password.encode()).hexdigest()
     response.status_code = status.HTTP_401_UNAUTHORIZED
-    if password_hash == normal_to_hashed:
+    if password_hash == normal_to_hashed and password is not None and password_hash is not None and password != '' and password_hash != '':
         response.status_code = status.HTTP_204_NO_CONTENT
 
     return response
