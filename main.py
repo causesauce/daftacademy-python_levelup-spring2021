@@ -1,32 +1,15 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, status, Response
+from typing import Optional
 import uvicorn
+import hashlib
 
 app = FastAPI()
 
 
-@app.post("/method", status_code=201)
-def method_post():
-    return {"method": "POST"}
-
-
-@app.get("/method", status_code=200)
-def method_post():
-    return {"method": "GET"}
-
-
-@app.put("/method", status_code=200)
-def method_post():
-    return {"method": "PUT"}
-
-
-@app.delete("/method", status_code=200)
-def method_post():
-    return {"method": "DELETE"}
-
-
-@app.options("/method", status_code=200)
-def method_post():
-    return {"method": "OPTIONS"}
+@app.get("/auth", status_code=204)
+def validate_password(password: str, password_hash: str, response: Response):
+    if password_hash != hashlib.sha512(password.encode()).hexdigest():
+        response.status_code = status.HTTP_401_UNAUTHORIZED
 
 
 if __name__ == '__main__':
