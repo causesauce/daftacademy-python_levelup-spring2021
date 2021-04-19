@@ -1,64 +1,45 @@
-from fastapi import FastAPI, status, Response, Request
+from fastapi import FastAPI
 import uvicorn
-import hashlib
+from pydantic import BaseModel
+import datetime
+
+
+class Patient(BaseModel):
+    name: str
+    surname: str
+
 
 app = FastAPI()
 
-
-# @app.get("/auth/")
-# def validate_password(password: str, password_hash: str, response: Response):
-#     normal_to_hashed = hashlib.sha512(password.encode()).hexdigest()
-#     response.status_code = 401
-#     if password_hash == normal_to_hashed:
-#         response.status_code = 204
-#
-#     return response
+counter = 1
 
 
-# @app.get("/auth")
-# def validate_password(request: Request, password: str, password_hash: str, response: Response):
-#
-#     response.status_code = 401
-#
-#
-#
-#     print(password)
-#     print(password_hash)
-# if request.query_params != '' or request.query_params is not None:
-#     a = str(request.query_params).split("&")
-#     if len(a) < 2:
-#         return response
-# password2 = a[0].split("=")[1]
-# password_hash2 = a[1].split("=")[1]
-# print(password2 == password)
-# print(password2)
-# print(password)
-# normal_to_hashed = hashlib.sha512(password.encode()).hexdigest()
-# response.status_code = status.HTTP_401_UNAUTHORIZED
-# if password_hash == normal_to_hashed and password is not None and password_hash is not None and password != '' and password_hash != '':
-#     response.status_code = status.HTTP_204_NO_CONTENT
-#
-# return response
+@app.post("/register", status_code=201)
+def process_client(patient: Patient):
+    global counter
+    id = counter
+    name = patient.name
+    surname = patient.surname
+    today_date = datetime.datetime.today()
+    number_of_letters = letters_num(patient)
+    injection_date = today_date + datetime.timedelta(days=number_of_letters)
+    counter += 1
+
+    return {
+        "id": id,
+        "name": name,
+        "surname": surname,
+        "register_date": today_date.strftime('%Y-%m-%d'),
+        "vaccination_date": injection_date.strftime('%Y-%m-%d')
+    }
 
 
-@app.get("/auth")
-def validate_password2(request: Request, response: Response):
-    response.status_code = 401
-    params_values = list(request.query_params.values())
-    if len(params_values) < 2:
-        return
-    password = params_values[0]
-    password_hash = params_values[1]
-    if password is None or password_hash is None or password == '' or password_hash == '':
-        return response
-    normal_to_hashed = hashlib.sha512(password.encode()).hexdigest()
-    print(password)
-    print(password_hash)
-    print(normal_to_hashed)
-    if password_hash == normal_to_hashed:
-        response.status_code = 204
-
-    return response
+def letters_num(patient: Patient):
+    letters_counter = 0
+    for i in patient.name+patient.surname:
+        if i.isalpha():
+            letters_counter += 1
+    return letters_counter
 
 
 if __name__ == '__main__':
